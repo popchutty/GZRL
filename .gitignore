@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+# Zephyr/CMake build outputs
+/build*/
+/twister-out*/
+/zephyr-out*/
+
+# Editor and Python cache files
+__pycache__/
+*.py[cod]
+*.swp
+*~

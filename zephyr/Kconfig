@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig GZRL
+	bool "GZRL robot library"
+	help
+	  Enable the GMaster Zephyr Robot Library integration layer.
+
+	  The initial module provides project scaffolding and a smoke sample only.
+	  Future GZRL subsystems select their own configuration symbols beneath this
+	  top-level option.

@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: gzrl
+
+build:
+  cmake: zephyr
+  kconfig: zephyr/Kconfig
+
+samples:
+  - samples

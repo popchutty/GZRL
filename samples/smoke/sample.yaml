@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  name: GZRL module smoke sample
+  description: Verifies external-module discovery and GZRL Kconfig integration.
+
+common:
+  tags:
+    - gzrl
+  integration_platforms:
+    - native_sim
+  harness: console
+  harness_config:
+    type: one_line
+    regex:
+      - "GZRL module smoke sample"
+
+tests:
+  sample.gzrl.smoke:
+    platform_allow:
+      - native_sim
