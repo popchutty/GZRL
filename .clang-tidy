@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+---
+Checks: >-
+  -*,
+  bugprone-branch-clone,
+  bugprone-infinite-loop,
+  bugprone-macro-parentheses,
+  bugprone-misplaced-widening-cast,
+  bugprone-sizeof-expression,
+  bugprone-suspicious-memset-usage,
+  bugprone-use-after-move,
+  clang-analyzer-core.*,
+  clang-analyzer-deadcode.DeadStores,
+  clang-analyzer-security.insecureAPI.strcpy,
+  misc-redundant-expression,
+  performance-move-const-arg,
+  readability-duplicate-include,
+  readability-misleading-indentation,
+  readability-redundant-control-flow
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*/GZRL/(applications|drivers|include|lib|samples|subsys|tests)/.*'
+FormatStyle: file

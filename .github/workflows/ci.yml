@@ -1,0 +1,75 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Manifest, style, and smoke test
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout GZRL
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          path: workspace/GZRL
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: Install host tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            ccache \
+            cmake \
+            device-tree-compiler \
+            g++-multilib \
+            gcc-multilib \
+            gperf \
+            libmagic1 \
+            ninja-build
+          python -m pip install --upgrade pip
+          python -m pip install clang-format==22.1.5 west==1.5.0
+
+      - name: Initialize west workspace
+        working-directory: workspace
+        run: |
+          west init -l GZRL
+          west update
+          west packages pip --install --ignore-venv-check
+
+      - name: Validate manifest and licensing
+        working-directory: workspace
+        run: |
+          west manifest --validate
+          reuse --root GZRL lint
+
+      - name: Check source formatting
+        working-directory: workspace/GZRL
+        run: |
+          git ls-files -z -- '*.c' '*.h' '*.cc' '*.cpp' '*.cxx' '*.hpp' |
+            xargs -0 -r clang-format --dry-run --Werror
+
+      - name: Run smoke test
+        working-directory: workspace
+        env:
+          ZEPHYR_TOOLCHAIN_VARIANT: host
+        run: |
+          west twister \
+            -T GZRL/samples/smoke \
+            -p native_sim \
+            -s sample.gzrl.smoke \
+            -O twister-out

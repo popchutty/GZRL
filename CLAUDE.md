@@ -74,6 +74,40 @@ Zephyr driver or service that uses it, then test both boundaries.
 - Do not pre-create empty feature, UI/LVGL, Linux-port, board, driver, test, or
   subsystem directories.
 
+## Tooling and CI
+
+- Source formatting follows Zephyr v4.4.1's `.clang-format` and coding style:
+  Linux-style braces, 8-column tabs, a 100-column limit, braces on every control
+  statement, and snake_case names. The written Zephyr guidelines take precedence
+  if clang-format produces an ambiguous or conflicting result.
+- Check all tracked C/C++ files from the GZRL repository root with:
+
+  ```sh
+  git ls-files -z -- '*.c' '*.h' '*.cc' '*.cpp' '*.cxx' '*.hpp' |
+    xargs -0 -r clang-format --dry-run --Werror
+  ```
+
+- `.clang-tidy` is an intentionally conservative correctness whitelist. Do not
+  replace it with all checks plus a large exclusion list. Generate a
+  Clang-compatible compile database, then run a focused check such as:
+
+  ```sh
+  ZEPHYR_TOOLCHAIN_VARIANT=host/llvm west build -p always -b native_sim \
+    -d build/tidy samples/smoke
+  clang-tidy -p build/tidy samples/smoke/src/main.c
+  ```
+
+- `.lazy.lua` provides the project-local LazyVim clangd and clang-format setup.
+  It resolves the repository and west workspace from its own location, then uses
+  `GZRL_CLANGD_BUILD_DIR` when set or selects the newest valid
+  `build*/**/compile_commands.json`. Relative overrides are resolved from the
+  GZRL repository root. After creating or changing a build directory, restart
+  clangd with `:LspRestart`.
+- `.github/workflows/ci.yml` is the minimum stable gate: manifest validation,
+  REUSE lint, clang-format, and the `native_sim` smoke scenario. Add clang-tidy
+  to CI only when the first real portable or Zephyr target gives it complete
+  compile-database coverage; do not enforce it over a partial source set.
+
 ## Agent orchestration
 
 - Run no more than **5 subagents concurrently**. Before launching another
@@ -98,7 +132,8 @@ Zephyr driver or service that uses it, then test both boundaries.
 
 ## Validation
 
-After changing the manifest, module discovery, or architecture glue, at minimum
-build and run `samples/smoke` on `native_sim` from the GZRL-managed workspace
-without `EXTRA_ZEPHYR_MODULES`, and run Twister against the affected sample/test
-tree. Keep the upstream Zephyr worktree clean.
+Before finishing a change, run the formatter check, `reuse lint`, and
+`git diff --check`. After changing the manifest, module discovery, or architecture
+glue, also build and run `samples/smoke` on `native_sim` from the GZRL-managed
+workspace without `EXTRA_ZEPHYR_MODULES`, and run Twister against the affected
+sample/test tree. Keep the upstream Zephyr worktree clean.
