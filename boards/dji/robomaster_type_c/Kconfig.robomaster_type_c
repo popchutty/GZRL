@@ -1,0 +1,5 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_ROBOMASTER_TYPE_C
+	select SOC_STM32F407XG

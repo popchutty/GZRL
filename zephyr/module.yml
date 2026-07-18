@@ -6,6 +6,11 @@ name: gzrl
 build:
   cmake: zephyr
   kconfig: zephyr/Kconfig
+  settings:
+    board_root: .
 
 samples:
   - samples
+
+boards:
+  - boards

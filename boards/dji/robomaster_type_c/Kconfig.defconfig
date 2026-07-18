@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_ROBOMASTER_TYPE_C
+
+source "boards/common/usb/Kconfig.cdc_acm_serial.defconfig"
+
+if BMI08X
+
+# Zephyr v4.4.1's BMI08X driver always initializes its RTIO bus.
+config SENSOR_ASYNC_API
+	default y
+
+endif # BMI08X
+
+endif # BOARD_ROBOMASTER_TYPE_C

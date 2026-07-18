@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+board:
+  name: robomaster_type_c
+  full_name: RoboMaster Development Board Type C
+  vendor: dji
+  socs:
+    - name: stm32f407xx
