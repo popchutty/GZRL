@@ -73,3 +73,35 @@ jobs:
             -p native_sim \
             -s sample.gzrl.smoke \
             -O twister-out
+
+      - name: Install ARM toolchain
+        working-directory: workspace
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          west sdk install \
+            --install-dir "${RUNNER_TEMP}/zephyr-sdk" \
+            --gnu-toolchains arm-zephyr-eabi \
+            --no-hosttools \
+            --personal-access-token "${GH_TOKEN}"
+
+      - name: Build RoboMaster Type C targets
+        working-directory: workspace
+        env:
+          ZEPHYR_TOOLCHAIN_VARIANT: zephyr
+          ZEPHYR_SDK_INSTALL_DIR: ${{ runner.temp }}/zephyr-sdk
+        run: |
+          west boards | grep -q '^robomaster_type_c'
+          west build -p always -b robomaster_type_c \
+            -d GZRL/build/ci-type-c-minimal \
+            zephyr/samples/basic/minimal
+          west build -p always -b robomaster_type_c \
+            -d GZRL/build/ci-type-c-pwm \
+            zephyr/samples/basic/blinky_pwm
+          west build -p always -b robomaster_type_c \
+            -d GZRL/build/ci-type-c-sensors \
+            zephyr/samples/sensor/accel_polling
+          west build -p always -b robomaster_type_c \
+            -d GZRL/build/ci-type-c-can \
+            zephyr/samples/drivers/can/counter -- \
+            -DCONFIG_CAN_DEFAULT_BITRATE=1000000

@@ -1,0 +1,315 @@
+/*
+ * SPDX-FileCopyrightText: 2026 GMaster contributors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <st/f4/stm32f407Xg.dtsi>
+#include <st/f4/stm32f407i(e-g)hx-pinctrl.dtsi>
+#include <zephyr/dt-bindings/adc/adc.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+
+/ {
+	model = "DJI RoboMaster Development Board Type C";
+	compatible = "dji,robomaster-type-c";
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,dtcm = &ccm0;
+		zephyr,canbus = &can1;
+	};
+
+	aliases {
+		sw0 = &user_button;
+		pwm-led0 = &green_pwm_led;
+		pwm-led1 = &red_pwm_led;
+		pwm-led2 = &blue_pwm_led;
+		accel0 = &bmi088_accel;
+		gyro0 = &bmi088_gyro;
+		magn0 = &ist8310;
+		volt-sensor0 = &battery_voltage;
+		watchdog0 = &iwdg;
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+
+		user_button: button {
+			label = "User button";
+			gpios = <&gpioa 0 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			zephyr,code = <INPUT_KEY_0>;
+		};
+	};
+
+	pwm_leds {
+		compatible = "pwm-leds";
+
+		green_pwm_led: green_pwm_led {
+			label = "User RGB green";
+			pwms = <&pwm5 2 PWM_USEC(1000) PWM_POLARITY_NORMAL>;
+		};
+
+		red_pwm_led: red_pwm_led {
+			label = "User RGB red";
+			pwms = <&pwm5 3 PWM_USEC(1000) PWM_POLARITY_NORMAL>;
+		};
+
+		blue_pwm_led: blue_pwm_led {
+			label = "User RGB blue";
+			pwms = <&pwm5 1 PWM_USEC(1000) PWM_POLARITY_NORMAL>;
+		};
+	};
+
+	battery_voltage: battery_voltage {
+		compatible = "voltage-divider";
+		io-channels = <&adc3 8>;
+		output-ohms = <22000>;
+		full-ohms = <222000>;
+	};
+};
+
+&clk_lsi {
+	status = "okay";
+};
+
+&clk_hse {
+	clock-frequency = <DT_FREQ_M(12)>;
+	status = "okay";
+};
+
+&pll {
+	div-m = <6>;
+	mul-n = <168>;
+	div-p = <2>;
+	div-q = <7>;
+	clocks = <&clk_hse>;
+	status = "okay";
+};
+
+&rcc {
+	clocks = <&pll>;
+	clock-frequency = <DT_FREQ_M(168)>;
+	ahb-prescaler = <1>;
+	apb1-prescaler = <4>;
+	apb2-prescaler = <2>;
+};
+
+&rtc {
+	clocks = <&rcc STM32_CLOCK(APB1, 28)>,
+		 <&rcc STM32_SRC_LSI RTC_SEL(2)>;
+	status = "okay";
+
+	backup_regs {
+		status = "okay";
+	};
+};
+
+&rng {
+	status = "okay";
+};
+
+&iwdg {
+	status = "okay";
+};
+
+&usart1 {
+	pinctrl-0 = <&usart1_tx_pa9 &usart1_rx_pb7>;
+	pinctrl-names = "default";
+	current-speed = <115200>;
+	status = "okay";
+};
+
+&usart3 {
+	pinctrl-0 = <&usart3_rx_pc11>;
+	pinctrl-names = "default";
+	current-speed = <100000>;
+	parity = "even";
+	stop-bits = "1";
+	data-bits = <8>;
+	status = "okay";
+};
+
+&usart6 {
+	pinctrl-0 = <&usart6_tx_pg14 &usart6_rx_pg9>;
+	pinctrl-names = "default";
+	current-speed = <115200>;
+	status = "okay";
+};
+
+&can1 {
+	pinctrl-0 = <&can1_rx_pd0 &can1_tx_pd1>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	can-transceiver {
+		max-bitrate = <1000000>;
+	};
+};
+
+&can2 {
+	pinctrl-0 = <&can2_rx_pb5 &can2_tx_pb6>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	can-transceiver {
+		max-bitrate = <1000000>;
+	};
+};
+
+&spi1 {
+	pinctrl-0 = <&spi1_sck_pb3 &spi1_miso_pb4 &spi1_mosi_pa7>;
+	pinctrl-names = "default";
+	cs-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>,
+		   <&gpiob 0 GPIO_ACTIVE_LOW>;
+	status = "okay";
+
+	bmi088_accel: bmi088_accel@0 {
+		compatible = "bosch,bmi08x-accel";
+		reg = <0>;
+		spi-max-frequency = <DT_FREQ_M(10)>;
+		spi-cpol;
+		spi-cpha;
+		int-gpios = <&gpioc 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		int1-map-io = <0x01>;
+		int2-map-io = <0x00>;
+		int1-conf-io = <0x08>;
+		int2-conf-io = <0x00>;
+		accel-hz = "800";
+		accel-fs = <3>;
+	};
+
+	bmi088_gyro: bmi088_gyro@1 {
+		compatible = "bosch,bmi08x-gyro";
+		reg = <1>;
+		spi-max-frequency = <DT_FREQ_M(10)>;
+		spi-cpol;
+		spi-cpha;
+		int-gpios = <&gpioc 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		int3-4-map-io = <0x01>;
+		int3-4-conf-io = <0x00>;
+		gyro-hz = "1000_116";
+		gyro-fs = <2000>;
+	};
+};
+
+&spi2 {
+	pinctrl-0 = <&spi2_sck_pb13 &spi2_miso_pb14 &spi2_mosi_pb15>;
+	pinctrl-names = "default";
+	cs-gpios = <&gpiob 12 GPIO_ACTIVE_LOW>;
+	status = "okay";
+};
+
+&i2c1 {
+	pinctrl-0 = <&i2c1_scl_pb8 &i2c1_sda_pb9>;
+	pinctrl-names = "default";
+	clock-frequency = <I2C_BITRATE_FAST>;
+	status = "okay";
+};
+
+&i2c2 {
+	pinctrl-0 = <&i2c2_scl_pf1 &i2c2_sda_pf0>;
+	pinctrl-names = "default";
+	clock-frequency = <I2C_BITRATE_FAST>;
+	status = "okay";
+};
+
+&i2c3 {
+	pinctrl-0 = <&i2c3_scl_pa8 &i2c3_sda_pc9>;
+	pinctrl-names = "default";
+	clock-frequency = <I2C_BITRATE_FAST>;
+	status = "okay";
+
+	ist8310: magnetometer@e {
+		compatible = "isentek,ist8310";
+		reg = <0x0e>;
+	};
+};
+
+&adc3 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-0 = <&adc3_in8_pf10>;
+	pinctrl-names = "default";
+	st,adc-prescaler = <6>;
+	status = "okay";
+
+	channel@8 {
+		reg = <8>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,vref-mv = <3300>;
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+	};
+};
+
+&timers1 {
+	status = "okay";
+
+	pwm1: pwm {
+		pinctrl-0 = <&tim1_ch1_pe9 &tim1_ch2_pe11
+			     &tim1_ch3_pe13 &tim1_ch4_pe14>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
+};
+
+&timers3 {
+	status = "okay";
+
+	pwm3: pwm {
+		pinctrl-0 = <&tim3_ch3_pc8>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
+};
+
+&timers4 {
+	status = "okay";
+
+	pwm4: pwm {
+		pinctrl-0 = <&tim4_ch3_pd14>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
+};
+
+&timers5 {
+	status = "okay";
+
+	pwm5: pwm {
+		pinctrl-0 = <&tim5_ch1_ph10 &tim5_ch2_ph11 &tim5_ch3_ph12>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
+};
+
+&timers8 {
+	status = "okay";
+
+	pwm8: pwm {
+		pinctrl-0 = <&tim8_ch1_pc6 &tim8_ch2_pi6 &tim8_ch3_pi7>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
+};
+
+&timers10 {
+	status = "okay";
+
+	pwm10: pwm {
+		pinctrl-0 = <&tim10_ch1_pf6>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
+};
+
+zephyr_udc0: &usbotg_fs {
+	pinctrl-0 = <&usb_otg_fs_dm_pa11 &usb_otg_fs_dp_pa12>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+#include <../boards/common/usb/cdc_acm_serial.dtsi>

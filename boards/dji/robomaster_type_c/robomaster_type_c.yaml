@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+identifier: robomaster_type_c
+name: RoboMaster Development Board Type C
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+ram: 192
+flash: 1024
+supported:
+  - adc
+  - can
+  - gpio
+  - i2c
+  - input
+  - pwm
+  - sensor
+  - spi
+  - usb_device
+  - watchdog
+vendor: dji
