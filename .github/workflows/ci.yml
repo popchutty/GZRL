@@ -105,3 +105,8 @@ jobs:
             -d GZRL/build/ci-type-c-can \
             zephyr/samples/drivers/can/counter -- \
             -DCONFIG_CAN_DEFAULT_BITRATE=1000000
+          west twister \
+            -T GZRL/samples/boards/robomaster_type_c_validation \
+            -p robomaster_type_c \
+            -s sample.gzrl.robomaster_type_c_validation \
+            -O GZRL/twister-out-ci-type-c-validation
