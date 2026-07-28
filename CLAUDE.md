@@ -130,6 +130,32 @@ Zephyr driver or service that uses it, then test both boundaries.
 - New source files use SPDX Apache-2.0 headers unless a compatible imported
   license requires otherwise.
 
+## Debugging discipline
+
+- Treat every change made from a suspected root cause as a provisional
+  experiment until runtime evidence confirms it fixes the reported behavior.
+- Before changing code, state the hypothesis, the observation that would
+  confirm or refute it, and the smallest change needed to test it. A successful
+  build alone is not evidence that a runtime bug is fixed.
+- Compare behavior before and after the experimental change through the real
+  affected interface. Where practical, also remove or disable the change and
+  confirm that the failure returns; this distinguishes a causal fix from a
+  coincidental result.
+- If evidence does not clearly support the hypothesis, revert every change made
+  specifically for that hypothesis before investigating another cause. Return
+  to the last known failing baseline rather than stacking speculative patches.
+- Do not retain workarounds, configuration changes, delays, retries, debug
+  instrumentation, helper scripts, or abstractions that did not demonstrably
+  solve the root problem or provide necessary lasting behavior.
+- After debugging, remove temporary diagnostics and review the complete diff for
+  hypothesis residue, dead code, duplicated logic, and broadened scope. Keep a
+  permanent change only when its necessity is supported by reproducible
+  evidence, an explicit requirement, or a regression check that would fail
+  without it.
+- Prefer the smallest causal fix. Every retained code path and configuration
+  option must have a clear current purpose; if removing it produces no
+  observable regression or requirement violation, remove it.
+
 ## Validation
 
 Before finishing a change, run the formatter check, `reuse lint`, and

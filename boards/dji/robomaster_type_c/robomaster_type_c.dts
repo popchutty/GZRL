@@ -26,6 +26,7 @@
 		pwm-led0 = &green_pwm_led;
 		pwm-led1 = &red_pwm_led;
 		pwm-led2 = &blue_pwm_led;
+		pwm-buzzer = &buzzer0;
 		accel0 = &bmi088_accel;
 		gyro0 = &bmi088_gyro;
 		magn0 = &ist8310;
@@ -33,7 +34,7 @@
 		watchdog0 = &iwdg;
 	};
 
-	gpio_keys {
+	gpio-keys {
 		compatible = "gpio-keys";
 
 		user_button: button {
@@ -43,30 +44,36 @@
 		};
 	};
 
-	pwm_leds {
+	pwm-leds {
 		compatible = "pwm-leds";
 
-		green_pwm_led: green_pwm_led {
+		green_pwm_led: green-pwm-led {
 			label = "User RGB green";
 			pwms = <&pwm5 2 PWM_USEC(1000) PWM_POLARITY_NORMAL>;
 		};
 
-		red_pwm_led: red_pwm_led {
+		red_pwm_led: red-pwm-led {
 			label = "User RGB red";
 			pwms = <&pwm5 3 PWM_USEC(1000) PWM_POLARITY_NORMAL>;
 		};
 
-		blue_pwm_led: blue_pwm_led {
+		blue_pwm_led: blue-pwm-led {
 			label = "User RGB blue";
 			pwms = <&pwm5 1 PWM_USEC(1000) PWM_POLARITY_NORMAL>;
 		};
+
+		buzzer0: buzzer0 {
+			label = "Buzzer";
+			pwms = <&pwm4 3 PWM_USEC(250) PWM_POLARITY_NORMAL>;
+		};
 	};
 
-	battery_voltage: battery_voltage {
+	battery_voltage: battery-voltage {
 		compatible = "voltage-divider";
 		io-channels = <&adc3 8>;
 		output-ohms = <22000>;
 		full-ohms = <222000>;
+		skip-calibration;
 	};
 };
 
@@ -165,7 +172,7 @@
 		   <&gpiob 0 GPIO_ACTIVE_LOW>;
 	status = "okay";
 
-	bmi088_accel: bmi088_accel@0 {
+	bmi088_accel: bmi088-accel@0 {
 		compatible = "bosch,bmi08x-accel";
 		reg = <0>;
 		spi-max-frequency = <DT_FREQ_M(10)>;
@@ -180,7 +187,7 @@
 		accel-fs = <3>;
 	};
 
-	bmi088_gyro: bmi088_gyro@1 {
+	bmi088_gyro: bmi088-gyro@1 {
 		compatible = "bosch,bmi08x-gyro";
 		reg = <1>;
 		spi-max-frequency = <DT_FREQ_M(10)>;
@@ -246,6 +253,7 @@
 };
 
 &timers1 {
+	st,prescaler = <167>;
 	status = "okay";
 
 	pwm1: pwm {
@@ -267,6 +275,7 @@
 };
 
 &timers4 {
+	st,prescaler = <83>;
 	status = "okay";
 
 	pwm4: pwm {
@@ -287,6 +296,7 @@
 };
 
 &timers8 {
+	st,prescaler = <167>;
 	status = "okay";
 
 	pwm8: pwm {

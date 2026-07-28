@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  name: RoboMaster Type C hardware validation shell
+  description: Provides discoverable quick, fixture, and interactive board tests with Zephyr Shell.
+
+common:
+  tags:
+    - gzrl
+    - board
+    - hardware
+    - shell
+  platform_allow:
+    - robomaster_type_c
+  build_only: true
+
+tests:
+  sample.gzrl.robomaster_type_c_validation: {}
