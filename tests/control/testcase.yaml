@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+tests:
+  gzrl.control:
+    tags:
+      - gzrl
+      - control
+    platform_allow:
+      - native_sim
+    integration_platforms:
+      - native_sim

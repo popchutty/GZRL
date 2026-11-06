@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+  GZRL classic CAN motor endpoint. This describes the wire protocol and bus
+  topology, not runtime control gains, authorization, or operating limits.
+  The application must configure runtime parameters before requesting motion.
+
+compatible: "gmaster,can-motor"
+
+include: base.yaml
+
+properties:
+  can:
+    type: phandle
+    required: true
+    description: CAN controller carrying this motor's messages.
+  model:
+    type: string
+    required: true
+    enum:
+      - "gm6020"
+      - "m3508"
+      - "m2006"
+      - "dm4310"
+      - "dm2325"
+      - "dm-multi"
+      - "lkmg"
+    description: Legacy-supported protocol profile; see GZRL motor documentation.
+  motor-id:
+    type: int
+    required: true
+    description: Protocol node ID, validated against the selected model at configuration.
+  feedback-id:
+    type: int
+    default: 0
+    description: DM MIT master arbitration ID; other models derive their feedback ID.

@@ -1,0 +1,59 @@
+/*
+ * SPDX-FileCopyrightText: 2026 GMaster contributors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/ {
+	fake_can0: fake-can0 { compatible = "zephyr,fake-can"; };
+	fake_can1: fake-can1 { compatible = "zephyr,fake-can"; };
+	conflict_can: conflict-can { compatible = "zephyr,fake-can"; };
+	motor_a: motor-a {
+		compatible = "gmaster,can-motor";
+		can = <&fake_can0>;
+		model = "m3508";
+		motor-id = <1>;
+	};
+	motor_b: motor-b {
+		compatible = "gmaster,can-motor";
+		can = <&fake_can0>;
+		model = "m3508";
+		motor-id = <2>;
+	};
+	motor_dm: motor-dm {
+		compatible = "gmaster,can-motor";
+		can = <&fake_can0>;
+		model = "dm4310";
+		motor-id = <1>;
+		feedback-id = <0x50>;
+	};
+	motor_dm2: motor-dm2 {
+		compatible = "gmaster,can-motor";
+		can = <&fake_can0>;
+		model = "dm2325";
+		motor-id = <2>;
+		feedback-id = <0x50>;
+	};
+	motor_mg: motor-mg {
+		compatible = "gmaster,can-motor";
+		can = <&fake_can0>;
+		model = "lkmg";
+		motor-id = <1>;
+	};
+	isolated_motor: isolated-motor {
+		compatible = "gmaster,can-motor";
+		can = <&fake_can1>;
+		model = "m3508";
+		motor-id = <1>;
+	};
+	conflict_a: conflict-a {
+		compatible = "gmaster,can-motor";
+		can = <&conflict_can>;
+		model = "m3508";
+		motor-id = <5>;
+	};
+	conflict_b: conflict-b {
+		compatible = "gmaster,can-motor";
+		can = <&conflict_can>;
+		model = "gm6020";
+		motor-id = <1>;
+	};
+};

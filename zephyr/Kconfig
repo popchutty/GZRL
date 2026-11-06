@@ -6,6 +6,41 @@ menuconfig GZRL
 	help
 	  Enable the GMaster Zephyr Robot Library integration layer.
 
-	  The initial module provides project scaffolding and a smoke sample only.
-	  Future GZRL subsystems select their own configuration symbols beneath this
-	  top-level option.
+if GZRL
+
+config GZRL_CONTROL
+	bool "Portable control algorithms"
+	help
+	  Enable independent PID, cascade, angle and fixed-storage filter primitives.
+
+config GZRL_MOTOR_CORE
+	bool "Portable motor protocols"
+	help
+	  Enable byte-wise codecs and feedback tracking for DJI, Damiao and LK motors.
+
+config GZRL_MOTOR
+	bool "CAN motor devices and application-driven scheduling"
+	depends on CAN
+	select GZRL_MOTOR_CORE
+	help
+	  Instantiate motor devices from Devicetree and provide bounded receive
+	  processing, explicit lifecycle management and asynchronous grouped sending.
+
+if GZRL_MOTOR
+
+config GZRL_MOTOR_INIT_PRIORITY
+	int "Motor device initialization priority"
+	default 90
+
+config GZRL_MOTOR_MAX_DEVICES
+	int "Maximum motors in one bus coordinator"
+	range 1 32
+	default 16
+
+config GZRL_MOTOR_RX_DEPTH
+	int "Receive queue depth per bus"
+	range 4 256
+	default 64
+
+endif
+endif
