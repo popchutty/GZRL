@@ -1,0 +1,88 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+mainmenu "GZRL motor control sample"
+
+source "Kconfig.zephyr"
+
+menu "Motor sample runtime settings"
+
+config SAMPLE_MOTOR_BITRATE
+	int "CAN bitrate"
+	default 1000000
+	range 10000 1000000
+
+config SAMPLE_MOTOR_EFFORT_LIMIT_MILLI
+	int "Native command effort limit multiplied by 1000"
+	default 100000
+	range 1 32767000
+	help
+	  Counts for DJI, DM multi and MG; N m for DM MIT. This is an
+	  application limit, not an inferred motor rating. Set before hardware use.
+
+config SAMPLE_MOTOR_GEAR_RATIO_MILLI
+	int "Motor revolutions per output revolution multiplied by 1000"
+	default 1000
+	range 1 1000000
+
+config SAMPLE_MOTOR_ENCODER_OFFSET
+	int "Encoder offset in native counts"
+	default 0
+	range 0 65535
+
+config SAMPLE_MOTOR_PMAX_MILLI
+	int "Verified DM MIT firmware PMAX in milliradians"
+	default 0
+	range 0 1000000000
+
+config SAMPLE_MOTOR_VMAX_MILLI
+	int "Verified DM MIT firmware VMAX in milliradians per second"
+	default 0
+	range 0 1000000000
+
+config SAMPLE_MOTOR_TMAX_MILLI
+	int "Verified DM MIT firmware TMAX in milli-newton metres"
+	default 0
+	range 0 1000000000
+
+config SAMPLE_MOTOR_POSITION_WRAP_MILLI
+	int "Verified DM MIT native wrap period in milliradians; zero means no wrap"
+	default 0
+	range 0 1000000000
+
+config SAMPLE_MOTOR_LEASE_MS
+	int "Operator authorization lifetime in milliseconds"
+	default 1000
+	range 100 5000
+
+config SAMPLE_MOTOR_SPEED_LIMIT_MILLI
+	int "Sample speed target limit in milliradians per second"
+	default 1000
+	range 1 1000000
+
+config SAMPLE_MOTOR_POSITION_LIMIT_MILLI
+	int "Sample position target magnitude limit in milliradians"
+	default 6283
+	range 1 1000000
+
+config SAMPLE_MOTOR_KP_MILLI
+	int "Inner or single-loop proportional gain multiplied by 1000"
+	default 1000
+	range 0 1000000000
+
+config SAMPLE_MOTOR_KI_MILLI
+	int "Inner or single-loop integral gain multiplied by 1000"
+	default 0
+	range 0 1000000000
+
+config SAMPLE_MOTOR_KD_MILLI
+	int "Inner or single-loop derivative gain multiplied by 1000"
+	default 0
+	range 0 1000000000
+
+config SAMPLE_MOTOR_OUTER_KP_MILLI
+	int "Position cascade outer proportional gain multiplied by 1000"
+	default 1000
+	range 0 1000000000
+
+endmenu

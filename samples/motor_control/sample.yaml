@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  name: GZRL application-driven motor control
+  description: Explicitly authorized single-motor direct and closed-loop control with bounded leases.
+
+common:
+  tags:
+    - gzrl
+    - motor
+    - can
+    - control
+  platform_allow:
+    - native_sim
+    - robomaster_type_c
+  integration_platforms:
+    - native_sim
+    - robomaster_type_c
+  build_only: true
+
+tests:
+  sample.gzrl.motor_control: {}

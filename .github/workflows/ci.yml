@@ -34,12 +34,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y \
             ccache \
+            clang \
+            clang-tidy \
             cmake \
             device-tree-compiler \
             g++-multilib \
             gcc-multilib \
             gperf \
             libmagic1 \
+            lld \
             ninja-build
           python -m pip install --upgrade pip
           python -m pip install clang-format==22.1.5 west==1.5.0
@@ -73,6 +76,32 @@ jobs:
             -p native_sim \
             -s sample.gzrl.smoke \
             -O twister-out
+
+      - name: Run control and motor tests
+        working-directory: workspace
+        env:
+          ZEPHYR_TOOLCHAIN_VARIANT: host
+        run: |
+          west twister -T GZRL/tests -p native_sim --inline-logs \
+            -O GZRL/twister-out-tests
+
+      - name: Build portable cores without Zephyr
+        working-directory: workspace
+        run: |
+          cmake -S GZRL/tests/portable -B GZRL/build/portable -G Ninja
+          cmake --build GZRL/build/portable
+          ctest --test-dir GZRL/build/portable --output-on-failure
+
+      - name: Check all control and motor production sources
+        working-directory: workspace
+        env:
+          ZEPHYR_TOOLCHAIN_VARIANT: host/llvm
+        run: |
+          west build -p always -b native_sim -d GZRL/build/tidy-motor \
+            GZRL/tests/motor_bus/fake -- -DCONFIG_GZRL_CONTROL=y
+          cd GZRL
+          git ls-files -z -- 'lib/*.c' 'drivers/*.c' 'subsys/*.c' |
+            xargs -0 -r clang-tidy --quiet --warnings-as-errors='*' -p build/tidy-motor
 
       - name: Install ARM toolchain
         working-directory: workspace
@@ -110,3 +139,5 @@ jobs:
             -p robomaster_type_c \
             -s sample.gzrl.robomaster_type_c_validation \
             -O GZRL/twister-out-ci-type-c-validation
+          west build -p always -b robomaster_type_c \
+            -d GZRL/build/ci-motor-control GZRL/samples/motor_control

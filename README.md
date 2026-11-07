@@ -12,10 +12,19 @@ project, but it is a new codebase and does not preserve the legacy API.
 
 ## Status
 
-The repository provides the external-module integration skeleton, a smoke
-sample, and a downstream Zephyr board port for the DJI RoboMaster Development
-Board Type C. No legacy GSRL algorithms, protocols, robot services, or complete
-applications have been migrated yet.
+The repository provides Zephyr integration, a downstream board port for the DJI
+RoboMaster Development Board Type C, independent control algorithms, and a CAN
+motor stack. The motor stack covers the legacy DJI GM6020/M3508/M2006, Damiao
+MIT and one-to-four firmware, and LK MG protocol profiles. It uses application
+thread scheduling, Devicetree motor devices, and explicit motion authorization.
+
+See [motor stack architecture and validation](docs/motor_stack.rst),
+[protocol contracts](docs/motor_protocols.rst), and
+[control algorithms](docs/control.rst). The motor sample starts without motion;
+real-hardware motor validation is recorded separately from automated tests.
+See the [dated validation record](docs/motor_validation.rst) for completed checks
+and the pending hardware acceptance matrix.
+No complete reference robot application has been migrated.
 
 The Type C port is build-validated against Zephyr v4.4.1. Physical peripheral
 validation is still tracked separately and must be completed on real hardware.

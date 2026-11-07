@@ -178,3 +178,10 @@ The port is build-validated against Zephyr v4.4.1. Physical validation must
 record the tested board revision and verify the probes, USB CDC, both CAN buses,
 external UARTs, DBUS, sensors, battery ADC, expansion buses, PWM outputs, buzzer,
 laser output, and heater before the port is described as hardware-verified.
+
+On 2026-11-07, SWD programming, USART6 and CAN1 communication with a GM6020 were
+exercised; see ``docs/motor_validation.rst`` for scope and remaining checks.
+Independent board power is required for this fixture: probe power alone allowed
+MCU/serial operation but CAN transmission failed with bit0 errors. Connecting
+the board's 24 V input restored external CAN communication without a firmware
+change. These checks do not validate the other peripherals listed above.

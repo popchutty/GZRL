@@ -1,0 +1,17 @@
+/*
+ * SPDX-FileCopyrightText: 2026 GMaster contributors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+	aliases {
+		motor0 = &sample_motor;
+	};
+
+	sample_motor: motor {
+		compatible = "gmaster,can-motor";
+		can = <&can1>;
+		model = "m3508";
+		motor-id = <1>;
+	};
+};
