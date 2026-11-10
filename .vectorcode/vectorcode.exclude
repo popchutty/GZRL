@@ -1,0 +1,65 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+# Repository metadata and indexing configuration.
+.git/
+.west/
+.vectorcode/
+
+# Zephyr/CMake build and test outputs, including nested sample builds.
+build*/
+twister-out*/
+zephyr-out*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+Testing/
+*.log
+
+# Local environments, caches and editor state.
+.venv/
+venv/
+.cache/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.vscode/
+.idea/
+*.py[cod]
+*.swp
+*.swo
+*~
+.DS_Store
+
+# License boilerplate and the duplicate symlink to AGENTS.md.
+/LICENSE
+/LICENSES/
+/CLAUDE.md
+*.license
+
+# Compiled firmware, libraries, archives and non-text assets.
+*.o
+*.a
+*.so
+*.so.*
+*.elf
+*.bin
+*.hex
+*.uf2
+*.map
+*.gcda
+*.gcno
+*.zip
+*.tar
+*.gz
+*.xz
+*.7z
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.mp3
+*.mp4

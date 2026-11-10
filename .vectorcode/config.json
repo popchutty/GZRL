@@ -1,0 +1,15 @@
+{
+  "embedding_function": "SentenceTransformerEmbeddingFunction",
+  "embedding_params": {
+    "model_name": "Qwen/Qwen3-Embedding-0.6B",
+    "backend": "torch",
+    "device": "cuda",
+    "normalize_embeddings": true
+  },
+  "embedding_dims": null,
+  "filetype_map": {
+    "cpp": ["^(cpp|cc|cxx|hpp|hh|hxx)$"]
+  },
+  "chunk_size": 2500,
+  "overlap_ratio": 0.2
+}

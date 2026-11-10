@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 GMaster contributors
+# SPDX-License-Identifier: Apache-2.0
+
+# Source, tests, Devicetree, module configuration and documentation.
+/applications/**
+/boards/**
+/docs/**
+/drivers/**
+/dts/**
+/include/**
+/lib/**
+/samples/**
+/subsys/**
+/tests/**
+/zephyr/**
+
+# Root documentation and development configuration.
+/README*
+/AGENTS.md
+/west.yml
+/CMakeLists.txt
+/Kconfig*
+/.github/**
+/.clang-format
+/.clang-tidy
+/.gitignore
+/.lazy.lua
+
+# Reject nested build trees here as well: generated symlinks to files outside
+# GZRL can bypass VectorCode 0.7.20's exclusion filter after path resolution.
+!build*/
+!twister-out*/
+!zephyr-out*/
+!CMakeFiles/
+!.git/
+!.venv/
+!venv/
